@@ -1,23 +1,36 @@
 import React from 'react';
-
+import {useNavigate} from 'react-router-dom';
 const LandingPage = () => {
+  const navigate = useNavigate();
   return (
     <div className="bg-[#FAF9F5] min-h-screen flex flex-col justify-between font-sans text-[#1C2E24] antialiased selection:bg-[#24A174]/10">  
 
         <nav className="fixed top-0 left-0 right-0 w-full bg-[#FAF9F5]/80 backdrop-blur-md border-b border-[#EBEAE4]/60 z-50 transition-all duration-200">
           <div className="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
             <div className="flex items-center gap-2.5 font-serif text-xl font-bold text-[#1C2E24] tracking-tight">
-              <div className="w-6 h-6 rounded-full bg-[#24A174] flex items-center justify-center text-white text-[11px] font-sans shadow-sm">
-                ✓
-              </div>
+              <div className="flex items-center justify-center w-12 h-12 bg-[#42b47e] rounded-[20px] shadow-sm mb-6">
+          <svg 
+            className="w-8 h-8 text-white" 
+            viewBox="0 0 24 24" 
+            fill="none" 
+            stroke="currentColor" 
+            strokeWidth="2.5" 
+            strokeLinecap="round" 
+            strokeLinejoin="round"
+          >
+            <path d="M12 22V12" />
+            <path d="M12 12c0-3.5 2.5-6 6-6 0 2.5-2.5 6-6 6Z" />
+            <path d="M12 14c0-3-1.5-5-4.5-5 0 2 1.5 5 4.5 5Z" />
+          </svg>
+        </div>
               FitCV
             </div>
             
             <div className="flex items-center gap-6">
-              <button className="text-sm font-medium text-gray-500 hover:text-[#1C2E24] transition-colors cursor-pointer">
+              <button className="text-sm font-medium text-gray-500 hover:text-[#1C2E24] transition-colors cursor-pointer" onClick={() => navigate('/login')}>
                 Login
               </button>
-              <button className="bg-[#24A174] hover:bg-[#1E8761] text-white text-xs font-medium px-4 py-2 rounded-full cursor-pointer shadow-sm transition-all hover:shadow active:scale-95">
+              <button className="bg-[#24A174] hover:bg-[#1E8761] text-white text-xs font-medium px-4 py-2 rounded-full cursor-pointer shadow-sm transition-all hover:shadow active:scale-95" onClick={() => navigate('/signup')}>
                 Register
               </button>
             </div>
@@ -44,11 +57,11 @@ const LandingPage = () => {
                 </h3>
 
                 <div className="flex flex-row items-center justify-center gap-4 mb-5">
-                  <button className="bg-[#24A174] hover:bg-[#1E8761] text-white text-sm font-medium px-6 py-3 rounded-full flex items-center gap-2 transition-all shadow-sm hover:shadow cursor-pointer">
+                  <button className="bg-[#24A174] hover:bg-[#1E8761] text-white text-sm font-medium px-6 py-3 rounded-full flex items-center gap-2 transition-all shadow-sm hover:shadow cursor-pointer" onClick={() => navigate('/demo')}>
                       Explore as Guest <span className="text-xs">➔</span>
                   </button>
-                  
-                  <button className="bg-white border border-[#EBEAE4] hover:bg-gray-50 text-[#1C2E24] text-sm font-medium px-7 py-3 rounded-full transition-all shadow-sm cursor-pointer">
+
+                  <button className="bg-white border border-[#EBEAE4] hover:bg-gray-50 text-[#1C2E24] text-sm font-medium px-7 py-3 rounded-full transition-all shadow-sm cursor-pointer" onClick={() => navigate('/login')}>
                       Sign in
                   </button>
                 </div>
