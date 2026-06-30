@@ -4,6 +4,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { toast } from 'react-toastify';
 
 export default function LoginPage() {
     const navigate = useNavigate();
@@ -21,10 +23,28 @@ export default function LoginPage() {
         password: '',
     };
 
-    const onSubmit = (values, { setSubmitting }) => {
-        console.log('Login Form data', values);
-        setSubmitting(false);
-    };
+    const onSubmit = async (values, { setSubmitting }) => {
+  try {
+    const res = await axios.post("http://localhost:5000/api/auth/login", {
+      email: values.email,
+      password: values.password,
+    });
+
+    toast.success("Login successful!");
+
+    localStorage.setItem("token", res.data.token);
+
+    navigate("/");
+
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message || "Invalid email or password"
+    );
+
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen w-full bg-[#FAF8F2]">
@@ -103,14 +123,12 @@ export default function LoginPage() {
             )}
           </Formik>
 
-          {/* Or Divider Line */}
           <div className="relative flex py-5 items-center justify-center">
             <div className="flex-grow border-t border-[#EBE8E0]"></div>
             <span className="flex-shrink mx-4 text-xs text-[#6B7280] font-sans">or</span>
             <div className="flex-grow border-t border-[#EBE8E0]"></div>
           </div>
-
-          {/* Continue as Guest Button */}
+        
           <button
             type="button"
             className="w-full py-3.5 bg-transparent text-[#1F2E22] border border-[#EBE8E0] font-medium rounded-full hover:bg-[#FAF8F2]/50 transition-colors focus:outline-none"
@@ -119,7 +137,6 @@ export default function LoginPage() {
             Continue as guest
           </button>
 
-          {/* Bottom Info text & link */}
           <div className="mt-5 text-center space-y-4">
             <p className="text-xs text-[#6B7280]">
               Guest mode is for recruiters & a quick demo.

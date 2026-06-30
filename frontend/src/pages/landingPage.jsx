@@ -150,7 +150,7 @@ const LandingPage = () => {
                 <div className="bg-white border border-[#F2F1EC] rounded-[24px] p-8 text-center shadow-[0_4px_30px_rgba(0,0,0,0.01)] flex flex-col items-center gap-5 min-h-[250px]">
                     <div className="w-11 h-11 rounded-full bg-[#EAF5F0] flex items-center justify-center text-[#24A174] shrink-0 mx-auto">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 21L7.188 15.904L2 15 Hustle L7.188 14.096L9 9L9.813 14.096L15 15L9.813 15.904Z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 21L7.188 15.904L2 15L7.188 14.096L9 9L9.813 14.096L15 15L9.813 15.904Z" />
                         </svg>
                     </div>
                     <div className="flex flex-col gap-2">

@@ -4,6 +4,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import axios from "axios";
+import { toast } from 'react-toastify';
 
 export default function SignupPage() {
     const navigate = useNavigate();
@@ -29,10 +31,40 @@ export default function SignupPage() {
         confirmPassword: '',
     };
 
-    const onSubmit = (values, {setSubmitting}) => {
-        console.log('Form data', values);
-        setSubmitting(false);
-    }
+    const onSubmit = async (values, { setSubmitting, setErrors }) => {
+  try {
+    const res = await axios.post(
+      "http://localhost:5000/api/auth/register",
+      {
+        name: values.fullname,
+        email: values.email,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+      }
+    );
+
+    toast.success("Account created successfully!");
+
+    console.log(res.data);
+
+    navigate("/login");
+
+  } catch (error) {
+    const message =
+      error.response?.data?.message || "Signup failed. Try again.";
+
+    toast.error(message);
+
+    // optional: still keep form error if needed
+    setErrors({
+      email: message,
+    });
+
+  } finally {
+    setSubmitting(false);
+  }
+};
+    
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen w-full bg-[#FAF8F2]">
@@ -128,7 +160,7 @@ export default function SignupPage() {
                   type="submit"
                   disabled={isSubmitting}
                   className="w-full mt-2 py-3.5 bg-[#42b47e] text-white font-medium rounded-full hover:bg-[#39a06f] transition-colors focus:outline-none disabled:opacity-70 shadow-sm"
-                  onClick={() => navigate('/login')}
+                  
                 >
                   {isSubmitting ? 'Creating account...' : 'Create account'}
                 </button>
