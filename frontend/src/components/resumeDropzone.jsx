@@ -1,14 +1,12 @@
 import React, {useCallback, useState} from "react";
 import {useDropzone} from "react-dropzone";
 
-export default function ResumeDropzone() {
-    const [file, setFile] = useState(null);
-
+export default function ResumeDropzone({file, onFileChange}) {
     const onDrop = useCallback((acceptedFiles) => {
         if (acceptedFiles.length > 0) {
-            setFile(acceptedFiles[0]);
+            onFileChange(acceptedFiles[0]);
         }
-    }, []);
+    }, [onFileChange]);
 
     const {getRootProps, getInputProps, isDragActive} = useDropzone({
         onDrop,

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const skillFeedback = ({ feedback }) => {
+const SkillFeedback = ({ feedback }) => {
    const data = feedback || {
     keywordsFound: ['React', 'Tailwind CSS', 'JavaScript'],
     missingSkills: ['TypeScript', 'Next.js', 'Unit Testing (Jest)'],
@@ -51,4 +51,4 @@ const skillFeedback = ({ feedback }) => {
   );
 };
 
-export default skillFeedback;
+export default SkillFeedback;

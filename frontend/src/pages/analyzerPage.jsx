@@ -4,7 +4,7 @@ import ResumeDropzone from '../components/resumeDropzone.jsx';
 import JobDescText from '../components/jobDescText.jsx';
 import ToneSelector from '../components/toneSelector.jsx';
 import MatchScore from '../components/MatchScore.jsx';
-import skillFeedback from '../components/skillFeedback.jsx';
+import SkillFeedback from '../components/skillFeedback.jsx';
 
 const AnalyzerPage = () => {
   const navigate = useNavigate();
@@ -117,7 +117,7 @@ const AnalyzerPage = () => {
           {results && (
             <div className="w-full lg:w-[55%] flex flex-col gap-5 animate-in fade-in slide-in-from-right-4 duration-300">
               <MatchScore score={results.score} />
-              <skillFeedback data={results.feedback} />
+              <SkillFeedback data={results.feedback} />
             </div>
           )}
 

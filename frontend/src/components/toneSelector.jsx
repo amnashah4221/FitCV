@@ -1,7 +1,7 @@
 // components/ToneSelector.jsx
 import React, { useState } from 'react';
 
-export default function ToneSelector() {
+export default function ToneSelector({selectedTone, onToneChange}) {
   const [selectedTone, setSelectedTone] = useState('professional');
 
   const tones = [
