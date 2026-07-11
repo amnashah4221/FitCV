@@ -2,8 +2,7 @@
 import React, { useState } from 'react';
 
 export default function ToneSelector({selectedTone, onToneChange}) {
-  const [selectedTone, setSelectedTone] = useState('professional');
-
+ 
   const tones = [
     { id: 'professional', title: 'Professional', desc: 'Crisp, measured' },
     { id: 'enthusiastic', title: 'Enthusiastic', desc: 'Warm, curious' },
@@ -22,7 +21,7 @@ export default function ToneSelector({selectedTone, onToneChange}) {
             <button
               key={tone.id}
               type="button"
-                  onClick={() => setSelectedTone(tone.id)}
+                  onClick={() => onToneChange(tone.id)}
               className={`flex flex-col items-start p-3 rounded-xl border text-left transition-all
                 ${isActive 
                   ? 'border-[#3ca775] bg-[#3ca775]/5 ring-1 ring-[#3ca775]' 
