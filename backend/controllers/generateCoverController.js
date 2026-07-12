@@ -1,5 +1,7 @@
 const groq = require('../config/groq');
 const { extractTextFromPDF } = require('../utils/pdfParser');
+const {extractAndMatchSkills} = require('../utils/skillsMatcher');
+const History = require('../models/History');
 
 const generateCoverLetter = async (req, res) => {
     try {
@@ -62,15 +64,29 @@ const generateCoverLetter = async (req, res) => {
       temperature: 0.7,
     })
 
+    let fullText = ''
      for await (const chunk of stream) {
       const content = chunk.choices[0]?.delta?.content || ''
       if (content) {
+        fullText += content;
         res.write(`data: ${JSON.stringify({ text: content })}\n\n`)
       }
     }
 
      res.write(`data: ${JSON.stringify({ done: true })}\n\n`)
     res.end()
+
+    const matchResult = await extractAndMatchSkills(resumeText, jobDescription);
+    await History.create({
+      user: req.user._id,
+      jobDescription,
+      tone: tone || 'professional',
+      coverLetter: fullText,
+      matchScore: matchResult.matchScore,
+      matchedSkills: matchResult.matchedSkills,
+      missingSkills: matchResult.missingSkills,
+      bonusSkills: matchResult.bonusSkills,
+    })
     }
     catch (error) {
         console.error('Error generating cover letter:', error);
