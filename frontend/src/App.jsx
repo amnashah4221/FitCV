@@ -6,6 +6,7 @@ import LandingPage from './pages/LandingPage.jsx';
 import SignupPage from './pages/signupPage.jsx';
 import LoginPage from './pages/loginPage.jsx';
 import AnalyzerPage from './pages/analyzerPage.jsx';
+import HistoryPage from './pages/historyPage.jsx';
 function App() {
  
 return (
@@ -16,6 +17,7 @@ return (
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/analyzer" element={<AnalyzerPage />} />
+        <Route path="/history" element={<HistoryPage />} />
       </Routes>
     </BrowserRouter>
     <ToastContainer  position="top-right"

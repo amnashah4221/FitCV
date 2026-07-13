@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ResumeDropzone from '../components/resumeDropzone.jsx';
 import JobDescText from '../components/jobDescText.jsx';
@@ -11,91 +11,111 @@ const AnalyzerPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [file, setFile] = useState(null)
-  const [jobDescription, setJobDescription] = useState('')
-  const [tone, setTone] = useState('professional')
-  const [coverLetter, setCoverLetter] = useState('')
-  const [skillsResult, setSkillsResult] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [file, setFile] = useState(null);
+  const [jobDescription, setJobDescription] = useState('');
+  const [tone, setTone] = useState('professional');
+  const [coverLetter, setCoverLetter] = useState('');
+  const [skillsResult, setSkillsResult] = useState(null);
+  const [isReAnalyzing, setIsReAnalyzing] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const isActive = (path) => location.pathname === path;
   const baseTabStyle = "text-sm font-medium px-4 py-2 rounded-full cursor-pointer transition-all duration-200 text-[#1C2E24]";
   const activeStyle = "bg-[#EFECE3] font-semibold";
   const inactiveStyle = "text-gray-500 hover:text-[#1C2E24]";
 
+  // 🌟 FIX: Is effect se hum dynamic data history se direct inputs mein inject karte hain
+  useEffect(() => {
+    if (location.state?.reAnalyzeData) {
+      const { jobDescription, tone, isReAnalyzing } = location.state.reAnalyzeData;
+      
+      if (jobDescription) setJobDescription(jobDescription);
+      if (tone) setTone(tone);
+      if (isReAnalyzing) setIsReAnalyzing(isReAnalyzing);
+      
+      // Clean query state taake page refresh par dobara triggers na hon
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
+
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    setError('');
 
-    if (!file) return setError('Please upload your resume PDF.')
-    if (!jobDescription.trim()) return setError('Please paste the job description.')
+    // Re-analyze ke case mein agar new file nahi bhi hai, toh bypass hona chahiye backend API logic par depend karte hue
+    if (!file && !isReAnalyzing) return setError('Please upload your resume PDF.');
+    if (!jobDescription.trim()) return setError('Please paste the job description.');
 
-    setLoading(true)
-    setCoverLetter('')
-    setSkillsResult(null)
+    setLoading(true);
+    setCoverLetter('');
+    setSkillsResult(null);
 
     try {
-      const formData = new FormData()
-      formData.append('resume', file)
-      formData.append('jobDescription', jobDescription)
-      formData.append('tone', tone)
+      const formData = new FormData();
+      if (file) {
+        formData.append('resume', file);
+      }
+      formData.append('jobDescription', jobDescription);
+      formData.append('tone', tone);
 
-      const token = localStorage.getItem('token')
+      const token = localStorage.getItem('token');
 
       // ── Cover letter streaming ──
       const response = await fetch('http://localhost:5000/api/cover-letter/generate', {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
-      })
+      });
 
-      if (!response.ok) throw new Error('Failed to generate cover letter')
+      if (!response.ok) throw new Error('Failed to generate cover letter');
 
-      const reader = response.body.getReader()
-      const decoder = new TextDecoder()
-      let fullText = ''
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
 
       while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
+        const { done, value } = await reader.read();
+        if (done) break;
 
-        const chunk = decoder.decode(value)
-        const lines = chunk.split('\n')
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
 
         lines.forEach((line) => {
           if (line.startsWith('data: ')) {
             try {
-              const parsed = JSON.parse(line.slice(6))
+              const parsed = JSON.parse(line.slice(6));
               if (parsed.text) {
-                fullText += parsed.text
-                setCoverLetter(fullText)
+                fullText += parsed.text;
+                setCoverLetter(fullText);
               }
             } catch {}
           }
-        })
+        });
       }
 
       // ── Skills match ──
-      const matchFormData = new FormData()
-      matchFormData.append('resume', file)
-      matchFormData.append('jobDescription', jobDescription)
+      const matchFormData = new FormData();
+      if (file) {
+        matchFormData.append('resume', file);
+      }
+      matchFormData.append('jobDescription', jobDescription);
 
       const matchRes = await api.post('/match/matchSkills', matchFormData, {
         headers: { 'Content-Type': 'multipart/form-data' },
-      })
+      });
 
-      setSkillsResult(matchRes.data.data)
+      setSkillsResult(matchRes.data.data);
 
     } catch (err) {
-      console.error(err)
-      setError('Something went wrong. Please try again.')
+      console.error(err);
+      setError('Something went wrong. Please try again.');
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  const hasResults = coverLetter || skillsResult
+  const hasResults = coverLetter || skillsResult;
 
   return (
     <div className="bg-[#FAF9F5] min-h-screen flex flex-col justify-between font-sans text-[#1C2E24] antialiased selection:bg-[#24A174]/10">
@@ -158,7 +178,8 @@ const AnalyzerPage = () => {
 
             <button
               type="submit"
-              disabled={loading || !file || !jobDescription.trim()}
+              // 🌟 FIX: Agar re-analyzing mode hai toh resume file ke baghair bhi form allow karega click hona
+              disabled={loading || (!file && !isReAnalyzing) || !jobDescription.trim()}
               className="w-full bg-[#3ca775] hover:bg-[#328e62] disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-sm font-medium py-3.5 px-4 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2"
             >
               {loading ? (
