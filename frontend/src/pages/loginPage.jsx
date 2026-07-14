@@ -132,8 +132,11 @@ export default function LoginPage() {
           <button
             type="button"
             className="w-full py-3.5 bg-transparent text-[#1F2E22] border border-[#EBE8E0] font-medium rounded-full hover:bg-[#FAF8F2]/50 transition-colors focus:outline-none"
-            onClick={() => navigate('/analyzer')}
-         >
+            onClick={() => {
+              localStorage.setItem('isGuest', 'true');
+              navigate('/analyzer');
+            }}
+          >
             Continue as guest
           </button>
 

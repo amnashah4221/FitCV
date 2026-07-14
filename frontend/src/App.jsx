@@ -8,6 +8,7 @@ import LoginPage from './pages/loginPage.jsx';
 import AnalyzerPage from './pages/analyzerPage.jsx';
 import HistoryPage from './pages/historyPage.jsx';
 import SavedAnalysisPage from './pages/savedAnalysisPage.jsx';
+import PrivateRoute from './services/privateRoute.jsx';
 function App() {
  
 return (
@@ -17,8 +18,16 @@ return (
         <Route path="/" element={<LandingPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/analyzer" element={<AnalyzerPage />} />
-        <Route path="/history" element={<HistoryPage />} />
+        <Route path="/analyzer" element={
+          <PrivateRoute guestAllowed={true}>
+            <AnalyzerPage />
+          </PrivateRoute>
+        } />
+        <Route path="/history" element={
+          <PrivateRoute guestAllowed={false}>
+            <HistoryPage />
+          </PrivateRoute>
+        } />
         <Route path="/saved-analysis" element={<SavedAnalysisPage />} />
       </Routes>
     </BrowserRouter>

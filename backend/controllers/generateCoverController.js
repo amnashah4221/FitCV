@@ -74,6 +74,25 @@ const generateCoverLetter = async (req, res) => {
       }
     }
 
+    if (req.user) {
+  try {
+    const matchResult = await extractAndMatchSkills(resumeText, jobDescription)
+    await History.create({
+      user: req.user._id,
+      jobDescription,
+      tone: tone || 'professional',
+      coverLetter: fullText,
+      matchScore: matchResult.matchScore,
+      matchedSkills: matchResult.matchedSkills,
+      missingSkills: matchResult.missingSkills,
+      bonusSkills: matchResult.bonusSkills,
+    })
+    console.log('History saved ✓')
+  } catch (saveError) {
+    console.error('History save error:', saveError.message)
+  }
+}
+
      res.write(`data: ${JSON.stringify({ done: true })}\n\n`)
     res.end()
 

@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 const { generateCoverLetter } = require('../controllers/generateCoverController')
-const { protect } = require('../middleware/authMiddleware')
+const { optionalProtect } = require('../middleware/authMiddleware')
 
 const storage = multer.memoryStorage()
 const upload = multer({
@@ -17,6 +17,6 @@ const upload = multer({
   limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
 })
 
-router.post('/generate', protect, upload.single('resume'), generateCoverLetter)
+router.post('/generate', optionalProtect, upload.single('resume'), generateCoverLetter)
 
 module.exports = router

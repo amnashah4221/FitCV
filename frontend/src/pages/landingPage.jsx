@@ -17,6 +17,7 @@ const LandingPage = () => {
             strokeWidth="2.5" 
             strokeLinecap="round" 
             strokeLinejoin="round"
+            onClick= {() => navigate('/')}
           >
             <path d="M12 22V12" />
             <path d="M12 12c0-3.5 2.5-6 6-6 0 2.5-2.5 6-6 6Z" />
@@ -57,7 +58,12 @@ const LandingPage = () => {
                 </h3>
 
                 <div className="flex flex-row items-center justify-center gap-4 mb-5">
-                  <button className="bg-[#24A174] hover:bg-[#1E8761] text-white text-sm font-medium px-6 py-3 rounded-full flex items-center gap-2 transition-all shadow-sm hover:shadow cursor-pointer" onClick={() => navigate('/demo')}>
+                  <button className="bg-[#24A174] hover:bg-[#1E8761] text-white text-sm font-medium px-6 py-3 rounded-full flex items-center gap-2 transition-all shadow-sm hover:shadow cursor-pointer" 
+                  onClick={()=> {
+                    localStorage.setItem('isGuest', 'true')
+                    navigate('/analyzer')
+                  }}
+                  >
                       Explore as Guest <span className="text-xs">➔</span>
                   </button>
 
