@@ -256,26 +256,13 @@ const HistoryPage = () => {
                       {/* Left Side: Dynamic action buttons */}
                       <div className="flex gap-2.5">
                         <button 
-                          onClick={() => alert(`Opening Full Result for ${companyName}`)}
+                          onClick={() => navigate('/saved-analysis', {state: {analysis: item}})}
                           className="flex items-center gap-1.5 bg-white border border-[#DEDCD4] hover:bg-slate-50 text-xs font-medium px-4 py-2 rounded-full shadow-sm transition text-slate-700"
                         >
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
                           Open full result
-                        </button>
-                        <button 
-                          onClick={() => navigate('/analyzer', { state: { reAnalyzeData: {
-                            jobDescription: item.jobDescription || '',
-                            tone: item.tone || 'professional',
-                            isReAnalyzing: true
-                          } } })}
-                          className="flex items-center gap-1.5 bg-white border border-[#DEDCD4] hover:bg-slate-50 text-xs font-medium px-4 py-2 rounded-full shadow-sm transition text-slate-700"
-                        >
-                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.212 12H19" />
-                          </svg>
-                          Re-analyze
                         </button>
                       </div>
                       

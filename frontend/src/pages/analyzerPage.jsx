@@ -16,7 +16,6 @@ const AnalyzerPage = () => {
   const [tone, setTone] = useState('professional');
   const [coverLetter, setCoverLetter] = useState('');
   const [skillsResult, setSkillsResult] = useState(null);
-  const [isReAnalyzing, setIsReAnalyzing] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -25,26 +24,12 @@ const AnalyzerPage = () => {
   const activeStyle = "bg-[#EFECE3] font-semibold";
   const inactiveStyle = "text-gray-500 hover:text-[#1C2E24]";
 
-  // 🌟 FIX: Is effect se hum dynamic data history se direct inputs mein inject karte hain
-  useEffect(() => {
-    if (location.state?.reAnalyzeData) {
-      const { jobDescription, tone, isReAnalyzing } = location.state.reAnalyzeData;
-      
-      if (jobDescription) setJobDescription(jobDescription);
-      if (tone) setTone(tone);
-      if (isReAnalyzing) setIsReAnalyzing(isReAnalyzing);
-      
-      // Clean query state taake page refresh par dobara triggers na hon
-      window.history.replaceState({}, document.title);
-    }
-  }, [location]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
-    // Re-analyze ke case mein agar new file nahi bhi hai, toh bypass hona chahiye backend API logic par depend karte hue
-    if (!file && !isReAnalyzing) return setError('Please upload your resume PDF.');
+     if (!file) return setError('Please upload your resume PDF.');
     if (!jobDescription.trim()) return setError('Please paste the job description.');
 
     setLoading(true);
@@ -105,8 +90,24 @@ const AnalyzerPage = () => {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      setSkillsResult(matchRes.data.data);
+      const skillsData = matchRes.data.data;
 
+      setSkillsResult(skillsData);
+
+      navigate('/saved-analysis', {
+        state: {
+          analysis: {
+            company: skillsData.company || "Company", 
+            role: skillsData.role || "Job Description", 
+            matchScore: skillsData.matchScore || 0,
+            coverLetter: fullText,
+            matchedSkills: skillsData.matchedSkills,
+            missingSkills: skillsData.missingSkills,
+            bonusSkills: skillsData.bonusSkills,
+            createdAt: new Date().toISOString()
+          }
+        }
+      });
     } catch (err) {
       console.error(err);
       setError('Something went wrong. Please try again.');
@@ -178,8 +179,7 @@ const AnalyzerPage = () => {
 
             <button
               type="submit"
-              // 🌟 FIX: Agar re-analyzing mode hai toh resume file ke baghair bhi form allow karega click hona
-              disabled={loading || (!file && !isReAnalyzing) || !jobDescription.trim()}
+              disabled={loading || !file || !jobDescription.trim()}
               className="w-full bg-[#3ca775] hover:bg-[#328e62] disabled:bg-slate-300 disabled:cursor-not-allowed text-white text-sm font-medium py-3.5 px-4 rounded-xl transition-all shadow-sm flex items-center justify-center gap-2"
             >
               {loading ? (

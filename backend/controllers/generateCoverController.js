@@ -2,6 +2,7 @@ const groq = require('../config/groq');
 const { extractTextFromPDF } = require('../utils/pdfParser');
 const {extractAndMatchSkills} = require('../utils/skillsMatcher');
 const History = require('../models/History');
+const extractJobInfo = require('../utils/extractJobInfo');
 
 const generateCoverLetter = async (req, res) => {
     try {
@@ -76,10 +77,13 @@ const generateCoverLetter = async (req, res) => {
      res.write(`data: ${JSON.stringify({ done: true })}\n\n`)
     res.end()
 
+    const { company, role } = await extractJobInfo(jobDescription);
     const matchResult = await extractAndMatchSkills(resumeText, jobDescription);
     await History.create({
       user: req.user._id,
       jobDescription,
+      role,
+      company,
       tone: tone || 'professional',
       coverLetter: fullText,
       matchScore: matchResult.matchScore,

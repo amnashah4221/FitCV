@@ -24,6 +24,14 @@ const historySchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    company: {
+    type: String,
+    default: "Unknown Company"
+    },
+    role: {
+        type: String,
+        default: "Unknown Role"
+    },
     matchedSkills: [String],
     missingSkills: [String],
     bonusSkills: [String],

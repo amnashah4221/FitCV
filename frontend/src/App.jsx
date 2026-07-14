@@ -7,6 +7,7 @@ import SignupPage from './pages/signupPage.jsx';
 import LoginPage from './pages/loginPage.jsx';
 import AnalyzerPage from './pages/analyzerPage.jsx';
 import HistoryPage from './pages/historyPage.jsx';
+import SavedAnalysisPage from './pages/savedAnalysisPage.jsx';
 function App() {
  
 return (
@@ -18,6 +19,7 @@ return (
         <Route path="/login" element={<LoginPage />} />
         <Route path="/analyzer" element={<AnalyzerPage />} />
         <Route path="/history" element={<HistoryPage />} />
+        <Route path="/saved-analysis" element={<SavedAnalysisPage />} />
       </Routes>
     </BrowserRouter>
     <ToastContainer  position="top-right"
