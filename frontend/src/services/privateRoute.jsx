@@ -8,7 +8,7 @@ export default function PrivateRoute({ children, guestAllowed = false }) {
     return <Navigate to="/login" replace />
   }
 
-  if (isGuest && !guestAllowed) {
+  if (!token && isGuest && !guestAllowed) {
     return <Navigate to="/login" replace />
   }
 

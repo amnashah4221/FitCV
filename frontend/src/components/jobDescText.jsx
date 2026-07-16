@@ -8,7 +8,7 @@ export default function JobDescText({value, onChange}) {
         Job description
       </label>
       
-      <textarea onChange={(e) => onChange(e.target.value)}
+      <textarea value = {value} onChange={(e) => onChange(e.target.value)}
         placeholder="Paste the job description here..."
         className="w-full h-40 bg-transparent resize-none border-0 p-0 text-sm text-slate-800 placeholder-slate-400 focus:ring-0 focus:outline-none"
       />

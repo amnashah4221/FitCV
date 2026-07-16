@@ -10,7 +10,7 @@ export default function ResumeDropzone({file, onFileChange}) {
 
     const {getRootProps, getInputProps, isDragActive} = useDropzone({
         onDrop,
-        accept: { 'application/pdf': ['pdf'] },
+        accept: { 'application/pdf': ['.pdf'] },
         multiple: false,
     });
 
@@ -39,7 +39,7 @@ export default function ResumeDropzone({file, onFileChange}) {
           <button 
             onClick={(e) => {
               e.stopPropagation();
-              setFile(null);
+              onFileChange(null);
             }}
             className="hover:text-red-500 font-bold ml-1"
           >

@@ -1,42 +1,52 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import {ToastContainer} from 'react-toastify';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import LandingPage from './pages/LandingPage.jsx';
-import SignupPage from './pages/signupPage.jsx';
-import LoginPage from './pages/loginPage.jsx';
-import AnalyzerPage from './pages/analyzerPage.jsx';
-import HistoryPage from './pages/historyPage.jsx';
-import SavedAnalysisPage from './pages/savedAnalysisPage.jsx';
+import { ToastContainer } from 'react-toastify';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PrivateRoute from './services/privateRoute.jsx';
+
+const LandingPage = lazy(() => import('./pages/LandingPage.jsx'));
+const SignupPage = lazy(() => import('./pages/signupPage.jsx'));
+const LoginPage = lazy(() => import('./pages/loginPage.jsx'));
+const AnalyzerPage = lazy(() => import('./pages/analyzerPage.jsx'));
+const HistoryPage = lazy(() => import('./pages/historyPage.jsx'));
+const SavedAnalysisPage = lazy(() => import('./pages/savedAnalysisPage.jsx'));
+
 function App() {
- 
-return (
+  return (
     <>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/analyzer" element={
-          <PrivateRoute guestAllowed={true}>
-            <AnalyzerPage />
-          </PrivateRoute>
-        } />
-        <Route path="/history" element={
-          <PrivateRoute guestAllowed={false}>
-            <HistoryPage />
-          </PrivateRoute>
-        } />
-        <Route path="/saved-analysis" element={<SavedAnalysisPage />} />
-      </Routes>
-    </BrowserRouter>
-    <ToastContainer  position="top-right"
+      <BrowserRouter>
+        <Suspense fallback={
+          <div className="min-h-screen bg-[#FAF9F5] flex items-center justify-center">
+            <div className="w-5 h-5 border-2 border-[#3ca775] border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        }>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/analyzer" element={
+              <PrivateRoute guestAllowed={true}>
+                <AnalyzerPage />
+              </PrivateRoute>
+            } />
+            <Route path="/history" element={
+              <PrivateRoute guestAllowed={false}>
+                <HistoryPage />
+              </PrivateRoute>
+            } />
+            <Route path="/saved-analysis" element={<SavedAnalysisPage />} />
+          </Routes>
+        </Suspense>
+      </BrowserRouter>
+
+      <ToastContainer
+        position="top-right"
         autoClose={2000}
         hideProgressBar={false}
         closeOnClick
         pauseOnHover
-        theme="light"/>
+        theme="light"
+      />
     </>
   )
 }

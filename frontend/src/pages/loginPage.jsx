@@ -33,6 +33,7 @@ export default function LoginPage() {
     toast.success("Login successful!");
 
     localStorage.setItem("token", res.data.token);
+    localStorage.removeItem("isGuest");
 
     navigate("/analyzer");
 

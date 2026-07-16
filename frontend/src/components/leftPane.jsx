@@ -5,7 +5,7 @@ export default function LeftPane() {
     <div 
       className="relative flex flex-col items-center justify-center min-h-screen w-full bg-[#FAF8F2] px-6 py-12 text-center overflow-hidden lg:w-1/2"
       style={{
-        backgroundImage: `linear-gradient(rgba(250, 248, 242, 0.94), rgba(250, 248, 242, 0.94)), url('https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=1000')`,
+        backgroundImage: `linear-gradient(rgba(250, 248, 242, 0.94), rgba(250, 248, 242, 0.94))`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}
