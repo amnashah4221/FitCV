@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import PrivateRoute from './services/privateRoute.jsx';
+import PrivateRoute from './services/PrivateRoute.jsx';
 
 const LandingPage = lazy(() => import('./pages/LandingPage.jsx'));
 const SignupPage = lazy(() => import('./pages/SignupPage.jsx'));
