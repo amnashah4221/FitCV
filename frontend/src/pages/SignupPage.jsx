@@ -1,5 +1,5 @@
 import React from 'react';
-import LeftPane from '../components/LeftPane.jsx';
+import LeftPane from '../components/leftPane.jsx';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
