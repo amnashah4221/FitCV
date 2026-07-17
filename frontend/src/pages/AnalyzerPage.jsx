@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import ResumeDropzone from '../components/resumeDropzone.jsx';
-import JobDescText from '../components/jobDescText.jsx';
-import ToneSelector from '../components/toneSelector.jsx';
+import ResumeDropzone from '../components/ResumeDropzone.jsx';
+import JobDescText from '../components/JobDescText.jsx';
+import ToneSelector from '../components/YoneSelector.jsx';
 import MatchScore from '../components/MatchScore.jsx';
-import SkillFeedback from '../components/skillFeedback.jsx';
+import SkillFeedback from '../components/SkillFeedback.jsx';
 import api from '../services/api.js';
 
 const AnalyzerPage = () => {
