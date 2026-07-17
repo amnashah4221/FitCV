@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ResumeDropzone from '../components/ResumeDropzone.jsx';
-import JobDescText from '../components/JobDescText.jsx';
+import JobDescText from '../components/JobDesText.jsx';
 import ToneSelector from '../components/ToneSelector.jsx';
 import MatchScore from '../components/MatchScore.jsx';
 import SkillFeedback from '../components/SkillFeedback.jsx';
