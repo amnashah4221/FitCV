@@ -48,7 +48,7 @@ const AnalyzerPage = () => {
       const token = localStorage.getItem('token');
 
       // ── Cover letter streaming ──
-      const response = await fetch('${api.defaults.baseURL}/cover-letter/generate', {
+      const response = await fetch(`${api.defaults.baseURL}/cover-letter/generate`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
