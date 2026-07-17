@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import axios from "axios";
+import api from '../services/api.js';
 import { toast } from 'react-toastify';
 
 export default function LoginPage() {
@@ -25,7 +25,7 @@ export default function LoginPage() {
 
     const onSubmit = async (values, { setSubmitting }) => {
   try {
-    const res = await axios.post("http://localhost:5000/api/auth/login", {
+    const res = await api.post("/auth/login", {
       email: values.email,
       password: values.password,
     });
