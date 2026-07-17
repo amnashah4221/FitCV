@@ -4,13 +4,12 @@ import { ToastContainer } from 'react-toastify';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import PrivateRoute from './services/privateRoute.jsx';
 
-const LandingPage = lazy(() => import('./pages/landingPage.jsx'));
-const SignupPage = lazy(() => import('./pages/signupPage.jsx'));
-const LoginPage = lazy(() => import('./pages/loginPage.jsx'));
-const AnalyzerPage = lazy(() => import('./pages/analyzerPage.jsx'));
-const HistoryPage = lazy(() => import('./pages/historyPage.jsx'));
-const SavedAnalysisPage = lazy(() => import('./pages/savedAnalysisPage.jsx'));
-
+const LandingPage = lazy(() => import('./pages/LandingPage.jsx'));
+const SignupPage = lazy(() => import('./pages/SignupPage.jsx'));
+const LoginPage = lazy(() => import('./pages/LoginPage.jsx'));
+const AnalyzerPage = lazy(() => import('./pages/AnalyzerPage.jsx'));
+const HistoryPage = lazy(() => import('./pages/HistoryPage.jsx'));
+const SavedAnalysisPage = lazy(() => import('./pages/SavedAnalysisPage.jsx'));
 function App() {
   return (
     <>
