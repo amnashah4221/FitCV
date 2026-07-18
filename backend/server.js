@@ -8,6 +8,7 @@ const matchRoutes = require('./routes/matchRoutes');
 const historyRoutes = require('./routes/historyRoutes');
 
 dotenv.config();
+connectDB(); // ← sirf yahan — ek baar
 
 const app = express();
 
@@ -16,15 +17,14 @@ app.use(cors({
     'https://fit-cv-frontend-omega.vercel.app',
     'http://localhost:5173',
   ],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+app.options('*', cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(async (req, res, next) => {
-  await connectDB();
-  next();
-});
 
 app.use('/api/auth', userRoutes);
 app.use('/api/cover-letter', generateLetterRoutes);
