@@ -52,6 +52,9 @@ const generateCoverLetter = async (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream')
     res.setHeader('Cache-Control', 'no-cache')
     res.setHeader('Connection', 'keep-alive')
+    res.setHeader('Access-Control-Allow-Origin', 'https://fit-cv-frontend-omega.vercel.app')
+    res.setHeader('Access-Control-Allow-Credentials', 'true')
+
 
     res.flushHeaders() // Flush the headers to establish SSE with the client
     const stream = await groq.chat.completions.create({
