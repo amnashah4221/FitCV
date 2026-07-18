@@ -8,7 +8,6 @@ const matchRoutes = require('./routes/matchRoutes');
 const historyRoutes = require('./routes/historyRoutes');
 
 dotenv.config();
-connectDB();
 
 const app = express();
 
@@ -22,6 +21,10 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(async (req, res, next) => {
+  await connectDB();
+  next();
+});
 
 app.use('/api/auth', userRoutes);
 app.use('/api/cover-letter', generateLetterRoutes);
