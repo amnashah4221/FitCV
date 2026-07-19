@@ -40,6 +40,10 @@ const extractAndMatchSkills = async(resumeText, jobDescription) => {
 
         const raw = response.choices[0]?.message?.content || '';
 
+        const cleaned = raw
+  .replace(/```json/g, '')
+  .replace(/```/g, '')
+  .trim()
         const jsonMatch = raw.match(/\{[\s\S]*\}/);
         if (!jsonMatch) {
             throw new Error('No valid JSON found in the response');
