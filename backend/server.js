@@ -8,7 +8,6 @@ const matchRoutes = require('./routes/matchRoutes');
 const historyRoutes = require('./routes/historyRoutes');
 
 dotenv.config();
-connectDB(); // ← sirf yahan — ek baar
 
 const app = express();
 
@@ -24,6 +23,16 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Ensure DB is connected before handling any request
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    res.status(503).json({ error: 'Database unavailable, please try again' });
+  }
+});
 
 app.use('/api/auth', userRoutes);
 app.use('/api/cover-letter', generateLetterRoutes);
