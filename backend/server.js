@@ -10,6 +10,7 @@ const historyRoutes = require('./routes/historyRoutes');
 dotenv.config();
 
 const app = express();
+app.disable('x-powered-by');
 
 app.use(cors({
   origin: [
