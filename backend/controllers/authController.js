@@ -12,18 +12,34 @@ const registerUser = async (req, res) => {
             return res.status(400).json({ message: 'Please provide all required fields' });
         }
 
+        if (
+            typeof name !== 'string' ||
+            typeof email !== 'string' ||
+            typeof password !== 'string' ||
+            typeof confirmPassword !== 'string'
+        ) {
+            return res.status(400).json({ message: 'Invalid input format' });
+        }
+        
+
         if(password !== confirmPassword){
             return res.status(400).json({ message: 'Passwords do not match' }); 
         }
 
-        const userExists = await User.findOne({ email });
+       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: 'Invalid email format' });
+        }
+
+        const userExists = await User.findOne({ email: email.toLowerCase().trim() });
+
         if(userExists){
             return res.status(400).json({ message: 'User already exists' });
         }
 
         const user = await User.create({
-            name,
-            email,
+             name: name.trim(),
+            email: email.toLowerCase().trim(),
             password
         });
 
