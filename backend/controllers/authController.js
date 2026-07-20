@@ -63,8 +63,12 @@ const registerUser = async (req, res) => {
             if(!email || !password){
                 return res.status(400).json({ message: 'Please provide all required fields' });
             }   
+            if (typeof email !== 'string' || typeof password !== 'string') {
+            return res.status(400).json({ message: 'Invalid input format' });
+        }
 
-            const user = await User.findOne({ email });
+        const user = await User.findOne({ email: email.toLowerCase().trim() });
+
             if(!user){
                 return res.status(404).json({ message: 'Invalid credentials' });
             }
