@@ -46,20 +46,27 @@ const extractAndMatchSkills = async (resumeText, jobDescription) => {
         .replaceAll('```', '')
         .trim();
 
-    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-
+    const jsonMatch = cleaned.match(/\{[\s\S]*?\}/);
     if (!jsonMatch) {
         throw new TypeError('AI response does not contain valid JSON');
     }
 
     let result;
 
-    try {
-        result = JSON.parse(jsonMatch[0]);
+try {
+    const start = cleaned.indexOf('{');
+    const end = cleaned.lastIndexOf('}') + 1;
+
+    if (start === -1 || end === 0) {
+        throw new TypeError('AI response does not contain valid JSON');
+    }
+
+    result = JSON.parse(cleaned.substring(start, end));
+
     } catch (error) {
         throw new TypeError('AI returned malformed JSON');
     }
-
+      
     // Validate structure
     if (
         !Array.isArray(result.matchedSkills) ||

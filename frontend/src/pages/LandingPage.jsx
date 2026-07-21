@@ -74,10 +74,13 @@ const LandingPage = () => {
 
                 <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] md:text-xs text-gray-500 font-medium">
                   <p className="flex items-center gap-1">
-                      <span className="text-[#24A174]">✓</span> {" "} No credit card
+                      <span className="text-[#24A174]">✓</span>
+                      <span>No credit card</span>
                   </p>
+
                   <p className="flex items-center gap-1">
-                      <span className="text-[#24A174]">✓</span> Guest demo
+                      <span className="text-[#24A174]">✓</span>
+                      <span>Guest demo</span>
                   </p>
                 </div>
 
