@@ -14,6 +14,11 @@ const app = express();
 app.disable("x-powered-by");
 
 // CORS Configuration
+// Note: app.use(cors(...)) already handles OPTIONS preflight requests
+// automatically, so a separate app.options("*", cors()) is not needed.
+// (That line was removed because "*" as a bare wildcard is no longer
+// supported by the newer path-to-regexp version used by Express, and
+// was crashing the whole Node process on startup.)
 app.use(
   cors({
     origin: function (origin, callback) {
@@ -41,9 +46,6 @@ app.use(
     ],
   })
 );
-
-// Handle preflight requests
-app.options("*", cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
