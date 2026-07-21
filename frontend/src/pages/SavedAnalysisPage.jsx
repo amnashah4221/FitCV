@@ -21,6 +21,7 @@ const SavedAnalysisPage = () => {
       <div className="bg-[#FAF9F5] min-h-screen flex flex-col items-center justify-center font-sans text-[#1C2E24] antialiased">
         <p className="text-sm text-slate-500 mb-4">No active analysis found.</p>
         <button 
+        type='button'
           onClick={() => navigate('/analyzer')}
           className="bg-[#3ca775] text-white hover:bg-[#328e62] transition-all px-5 py-2 rounded-full font-medium text-sm"
         >
@@ -97,12 +98,14 @@ const SavedAnalysisPage = () => {
 
           <div className="flex items-center gap-6">
             <button 
+            type='button'
               className={`text-sm font-medium px-4 py-2 rounded-full cursor-pointer transition-all duration-200 text-gray-500 hover:text-[#1C2E24]`} 
               onClick={() => navigate('/analyzer')}
             >
               Analyzer
             </button>
             <button 
+            type='button'
               className={`text-sm font-medium px-4 py-2 rounded-full cursor-pointer transition-all duration-200 text-gray-500 hover:text-[#1C2E24]`} 
               onClick={() => navigate('/history')}
             >
@@ -112,6 +115,7 @@ const SavedAnalysisPage = () => {
           
           {isLoggedIn && (
             <button
+            type='button'
               onClick={handleLogout}
               className="text-sm font-medium text-gray-500 hover:text-rose-500 transition-colors px-2 py-1.5 rounded-lg cursor-pointer"
             >
@@ -126,6 +130,7 @@ const SavedAnalysisPage = () => {
         
         {/* Back navigation action */}
         <button 
+        type='button'
           onClick={() => navigate(-1)} 
           className="flex items-center gap-2 text-xs font-medium text-slate-500 hover:text-[#1C2E24] transition-all self-start mb-8 cursor-pointer"
         >
@@ -175,6 +180,7 @@ const SavedAnalysisPage = () => {
           
           <div className="flex gap-2">
             <button 
+            type='button'
               onClick={handleCopy}
               className="flex items-center gap-1.5 border border-[#E5E3D8] hover:bg-[#EFECE3]/30 text-xs font-semibold px-4 py-1.5 rounded-[10px] shadow-xs transition duration-200 text-slate-700 bg-white cursor-pointer"
             >
@@ -184,6 +190,7 @@ const SavedAnalysisPage = () => {
               {copied ? 'Copied!' : 'Copy'}
             </button>
             <button 
+              type='button'
               onClick={handleDownload}
               className="flex items-center gap-1.5 border border-[#E5E3D8] hover:bg-[#EFECE3]/30 text-xs font-semibold px-4 py-1.5 rounded-[10px] shadow-xs transition duration-200 text-slate-700 bg-white cursor-pointer"
             >
@@ -226,7 +233,7 @@ const SavedAnalysisPage = () => {
 
               <div className="flex flex-wrap gap-2">
                 {matchedSkills.length > 0 ? (
-                  matchedSkills.map((skill, index) => (
+                  matchedSkills.map((skill) => (
                     <span 
                       key={skill} 
                       className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-[#EFECE3]/30 border border-[#E5E3D8] text-[#1C2E24]"
@@ -258,7 +265,7 @@ const SavedAnalysisPage = () => {
 
               <div className="flex flex-wrap gap-2">
                 {missingSkills.length > 0 ? (
-                  missingSkills.map((skill, index) => (
+                  missingSkills.map((skill) => (
                     <span 
                       key={skill} 
                       className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-[#EFECE3]/30 border border-[#E5E3D8] text-[#1C2E24]"
@@ -290,7 +297,7 @@ const SavedAnalysisPage = () => {
 
               <div className="flex flex-wrap gap-2">
                 {bonusSkills.length > 0 ? (
-                  bonusSkills.map((skill, index) => (
+                  bonusSkills.map((skill) => (
                     <span 
                       key={skill} 
                       className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-[#EFECE3]/30 border border-[#E5E3D8] text-[#1C2E24]"

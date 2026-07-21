@@ -37,6 +37,7 @@ export default function ResumeDropzone({file, onFileChange}) {
             <div className="flex items-center gap-2 bg-[#e9e6dc] px-3 py-1.5 rounded-full text-xs font-medium text-slate-700">
           <span>📄 {file.name}</span>
           <button 
+          type="button"
             onClick={(e) => {
               e.stopPropagation();
               onFileChange(null);

@@ -28,10 +28,10 @@ const LandingPage = () => {
             </div>
             
             <div className="flex items-center gap-6">
-              <button className="text-sm font-medium text-gray-500 hover:text-[#1C2E24] transition-colors cursor-pointer" onClick={() => navigate('/login')}>
+              <button type='button' className="text-sm font-medium text-gray-500 hover:text-[#1C2E24] transition-colors cursor-pointer" onClick={() => navigate('/login')}>
                 Login
               </button>
-              <button className="bg-[#24A174] hover:bg-[#1E8761] text-white text-xs font-medium px-4 py-2 rounded-full cursor-pointer shadow-sm transition-all hover:shadow active:scale-95" onClick={() => navigate('/signup')}>
+              <button type='button' className="bg-[#24A174] hover:bg-[#1E8761] text-white text-xs font-medium px-4 py-2 rounded-full cursor-pointer shadow-sm transition-all hover:shadow active:scale-95" onClick={() => navigate('/signup')}>
                 Register
               </button>
             </div>
@@ -43,9 +43,9 @@ const LandingPage = () => {
             <section className="max-w-5xl mx-auto text-center flex flex-col items-center mb-16">
                 
                 <div className="inline-flex items-center gap-1.5 bg-white border border-[#EBEAE4] rounded-full px-3 py-1 text-[11px] md:text-xs font-medium text-gray-500 shadow-sm mb-8">
-                  <span className="text-emerald-600 text-xs">↗</span>
-                  Smarter applications, less guesswork
-                </div>
+                   <span className="text-emerald-600 text-xs">↗</span>
+                   <span>Smarter applications, less guesswork</span>
+                      </div>
 
                 <h1 className="font-serif text-4xl md:text-[64px] tracking-tight leading-[1.1] w-full max-w-4xl mb-6">
                   <span className="block md:inline md:whitespace-nowrap text-[#1C2E24]">Tailor your resume to any job,</span>
@@ -58,7 +58,7 @@ const LandingPage = () => {
                 </h3>
 
                 <div className="flex flex-row items-center justify-center gap-4 mb-5">
-                  <button className="bg-[#24A174] hover:bg-[#1E8761] text-white text-sm font-medium px-6 py-3 rounded-full flex items-center gap-2 transition-all shadow-sm hover:shadow cursor-pointer" 
+                  <button type='button' className="bg-[#24A174] hover:bg-[#1E8761] text-white text-sm font-medium px-6 py-3 rounded-full flex items-center gap-2 transition-all shadow-sm hover:shadow cursor-pointer" 
                   onClick={()=> {
                     localStorage.setItem('isGuest', 'true')
                     navigate('/analyzer')
@@ -67,7 +67,7 @@ const LandingPage = () => {
                       Explore as Guest <span className="text-xs">➔</span>
                   </button>
 
-                  <button className="bg-white border border-[#EBEAE4] hover:bg-gray-50 text-[#1C2E24] text-sm font-medium px-7 py-3 rounded-full transition-all shadow-sm cursor-pointer" onClick={() => navigate('/login')}>
+                  <button type='button' className="bg-white border border-[#EBEAE4] hover:bg-gray-50 text-[#1C2E24] text-sm font-medium px-7 py-3 rounded-full transition-all shadow-sm cursor-pointer" onClick={() => navigate('/login')}>
                       Sign in
                   </button>
                 </div>

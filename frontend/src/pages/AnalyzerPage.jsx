@@ -149,16 +149,19 @@ const AnalyzerPage = () => {
 
           <div className="flex items-center gap-6">
             <button
+            type='button'
               className={`${baseTabStyle} ${isActive('/analyzer') ? activeStyle : inactiveStyle}`}
               onClick={() => navigate('/analyzer')}
             >Analyzer</button>
             <button
+            type='button'
               className={`${baseTabStyle} ${isActive('/history') ? activeStyle : inactiveStyle}`}
               onClick={() => navigate('/history')}
             >History</button>
           </div>
           {isLoggedIn && (
             <button
+            type='button'
               onClick={handleLogout}
               className="text-sm font-medium text-gray-500 hover:text-rose-500 transition-colors px-2 py-1.5 rounded-lg cursor-pointer"
             >
@@ -241,6 +244,7 @@ const AnalyzerPage = () => {
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="font-serif text-lg font-semibold text-slate-900">Cover Letter</h3>
                     <button
+                    type='button'
                       onClick={() => navigator.clipboard.writeText(coverLetter)}
                       className="text-xs text-[#3ca775] hover:underline"
                     >Copy</button>

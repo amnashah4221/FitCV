@@ -11,9 +11,9 @@ export default function ToneSelector({selectedTone, onToneChange}) {
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-xs font-semibold text-slate-500 tracking-wide uppercase">
+      <p className="text-xs font-semibold text-slate-500 tracking-wide uppercase">
         Tone
-      </label>
+      </p>
       <div className="grid grid-cols-3 gap-3">
         {tones.map((tone) => {
               const isActive = selectedTone === tone.id;

@@ -135,13 +135,13 @@ const HistoryPage = () => {
           </div>
 
           <div className="flex items-center gap-6">
-            <button className={`${baseTabStyle} ${isActive('/analyzer') ? activeStyle : inactiveStyle}`} onClick={() => navigate('/analyzer')}>Analyzer</button>
-            <button className={`${baseTabStyle} ${isActive('/history') ? activeStyle : inactiveStyle}`} onClick={() => navigate('/history')}>History</button>
+            <button type='button' className={`${baseTabStyle} ${isActive('/analyzer') ? activeStyle : inactiveStyle}`} onClick={() => navigate('/analyzer')}>Analyzer</button>
+            <button type='button' className={`${baseTabStyle} ${isActive('/history') ? activeStyle : inactiveStyle}`} onClick={() => navigate('/history')}>History</button>
 
           </div>
 
           {isLoggedIn && (
-             <button
+             <button type='button'
               onClick={handleLogout}
               className="text-sm font-medium text-gray-500 hover:text-rose-500 transition-colors px-2 py-1.5 rounded-lg cursor-pointer"
             >
@@ -164,6 +164,7 @@ const HistoryPage = () => {
             </p>
           </div>
           <button 
+          type='button'
             onClick={() => navigate('/analyzer')}
             className="flex items-center gap-2 bg-[#3ca775] text-white hover:bg-[#328e62] transition-all px-5 py-2.5 rounded-full font-medium text-sm shadow-sm"
           >
@@ -309,6 +310,7 @@ const HistoryPage = () => {
                       {/* Left Side: Dynamic action buttons */}
                       <div className="flex gap-2.5">
                         <button 
+                        type='button'
                           onClick={() => navigate('/saved-analysis', {state: {analysis: item}})}
                           className="flex items-center gap-1.5 bg-white border border-[#DEDCD4] hover:bg-slate-50 text-xs font-medium px-4 py-2 rounded-full shadow-sm transition text-slate-700"
                         >
@@ -321,6 +323,7 @@ const HistoryPage = () => {
                       
                       {/* Right Side: Delete */}
                       <button 
+                      type='button'
                         onClick={(e) => handleDelete(item._id, e)}
                         className="flex items-center gap-1.5 text-xs font-medium text-slate-400 hover:text-rose-600 transition px-2 py-1.5"
                       >
