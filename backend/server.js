@@ -14,38 +14,82 @@ const app = express();
 
 app.disable("x-powered-by");
 
+// CORS Configuration
 app.use(
   cors({
-    origin: [
-      "https://fit-cv-frontend-omega.vercel.app",
-      "http://localhost:5173",
-    ],
+    origin: function (origin, callback) {
+      const allowedOrigins = [
+        "https://fit-cv-frontend-omega.vercel.app",
+        "http://localhost:5173",
+      ];
+
+      // Allow requests without origin (Postman, server-to-server)
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      // Allow listed origins and Vercel preview deployments
+      if (
+        allowedOrigins.includes(origin) ||
+        origin.includes("vercel.app")
+      ) {
+        return callback(null, true);
+      }
+
+      return callback(new Error("Not allowed by CORS"));
+    },
+
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+
+    methods: [
+      "GET",
+      "POST",
+      "PUT",
+      "DELETE",
+      "OPTIONS",
+    ],
+
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+    ],
   })
 );
+
+// Handle preflight requests
+app.options("*", cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
+// Database Connection
 connectDB().catch((err) => {
   console.error("Database connection failed:", err);
   process.exit(1);
 });
 
+
+// API Routes
 app.use("/api/auth", userRoutes);
 app.use("/api/cover-letter", generateLetterRoutes);
 app.use("/api/match", matchRoutes);
 app.use("/api/history", historyRoutes);
 
+
+// Health Check Route
 app.get("/", (req, res) => {
-  res.json({ message: "FitCV API running ✓" });
+  res.json({
+    message: "FitCV API running ✓",
+  });
 });
 
+
+// Export for Vercel
 module.exports = app;
 
+
+// Local Development Server
 if (require.main === module) {
   const PORT = process.env.PORT || 5000;
 
