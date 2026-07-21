@@ -1,52 +1,64 @@
-const jwt = require('jsonwebtoken')
-const User = require('../models/User')
-
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 const protect = async (req, res, next) => {
   try {
-    let token;
+    const authHeader = req.headers.authorization;
 
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      token = req.headers.authorization.split(" ")[1];
-
-      if (!token) {
-        return res.status(401).json({ message: "No token found" });
-      }
-
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      req.user = await User.findById(decoded.id).select("-password");
-
-      return next();
+    if (!authHeader?.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "Not authorized" });
     }
 
-    return res.status(401).json({ message: "Not authorized" });
+    const token = authHeader.split(" ")[1];
 
+    if (!token) {
+      return res.status(401).json({ message: "No token found" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.id).select("-password");
+
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    req.user = user;
+    return next();
   } catch (error) {
     console.error("AUTH ERROR:", error);
 
     return res.status(401).json({
-      message: "Token failed or invalid secret",
-      error: error.message
+      message: "Token failed or invalid",
+      error: error.message,
     });
   }
 };
 
 const optionalProtect = async (req, res, next) => {
   try {
-    const authHeader = req.headers.authorization
-    if (authHeader && authHeader.startsWith('Bearer')) {
-      const token = authHeader.split(' ')[1]
-      const decoded = jwt.verify(token, process.env.JWT_SECRET)
-      req.user = await User.findById(decoded.id).select('-password')
+    const authHeader = req.headers.authorization;
+
+    if (authHeader?.startsWith("Bearer ")) {
+      const token = authHeader.split(" ")[1];
+
+      if (token) {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        const user = await User.findById(decoded.id).select("-password");
+
+        if (user) {
+          req.user = user;
+        }
+      }
     }
-    next()
   } catch (error) {
-    next()
+    console.warn("Optional auth failed:", error.message);
   }
-}
 
-module.exports = { protect, optionalProtect }
+  next();
+};
 
+module.exports = {
+  protect,
+  optionalProtect,
+};
