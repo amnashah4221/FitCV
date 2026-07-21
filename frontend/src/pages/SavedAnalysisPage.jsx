@@ -75,7 +75,7 @@ const SavedAnalysisPage = () => {
     element.download = `${companyName.toLowerCase().replace(/\s+/g, '-')}-cover-letter.txt`;
     document.body.appendChild(element);
     element.click();
-    document.body.removeChild(element);
+    element.remove();
   };
 
   return (
@@ -111,14 +111,12 @@ const SavedAnalysisPage = () => {
           </div>
           
           {isLoggedIn && (
-            <>
             <button
               onClick={handleLogout}
               className="text-sm font-medium text-gray-500 hover:text-rose-500 transition-colors px-2 py-1.5 rounded-lg cursor-pointer"
             >
               Logout
             </button>
-            </>
           )}
         </div>
       </nav>
@@ -230,7 +228,7 @@ const SavedAnalysisPage = () => {
                 {matchedSkills.length > 0 ? (
                   matchedSkills.map((skill, index) => (
                     <span 
-                      key={index} 
+                      key={skill} 
                       className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-[#EFECE3]/30 border border-[#E5E3D8] text-[#1C2E24]"
                     >
                       {skill}
@@ -262,7 +260,7 @@ const SavedAnalysisPage = () => {
                 {missingSkills.length > 0 ? (
                   missingSkills.map((skill, index) => (
                     <span 
-                      key={index} 
+                      key={skill} 
                       className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-[#EFECE3]/30 border border-[#E5E3D8] text-[#1C2E24]"
                     >
                       {skill}
@@ -294,7 +292,7 @@ const SavedAnalysisPage = () => {
                 {bonusSkills.length > 0 ? (
                   bonusSkills.map((skill, index) => (
                     <span 
-                      key={index} 
+                      key={skill} 
                       className="text-[11px] font-medium px-3 py-1.5 rounded-full bg-[#EFECE3]/30 border border-[#E5E3D8] text-[#1C2E24]"
                     >
                       {skill}

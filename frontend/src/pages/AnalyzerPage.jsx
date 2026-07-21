@@ -158,14 +158,12 @@ const AnalyzerPage = () => {
             >History</button>
           </div>
           {isLoggedIn && (
-            <>
             <button
               onClick={handleLogout}
               className="text-sm font-medium text-gray-500 hover:text-rose-500 transition-colors px-2 py-1.5 rounded-lg cursor-pointer"
             >
               Logout
             </button>
-            </>
           )}
         </div>
       </nav>

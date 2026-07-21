@@ -22,7 +22,7 @@ const LandingPage = () => {
             <path d="M12 22V12" />
             <path d="M12 12c0-3.5 2.5-6 6-6 0 2.5-2.5 6-6 6Z" />
             <path d="M12 14c0-3-1.5-5-4.5-5 0 2 1.5 5 4.5 5Z" />
-          </svg>
+    F      </svg>
         </div>
               FitCV
             </div>
@@ -74,7 +74,7 @@ const LandingPage = () => {
 
                 <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[11px] md:text-xs text-gray-500 font-medium">
                   <p className="flex items-center gap-1">
-                      <span className="text-[#24A174]">✓</span> No credit card
+                      <span className="text-[#24A174]">✓</span> {" "} No credit card
                   </p>
                   <p className="flex items-center gap-1">
                       <span className="text-[#24A174]">✓</span> Guest demo

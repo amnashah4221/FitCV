@@ -1,5 +1,6 @@
 const groq = require('../config/groq');
-const extractAndMatchSkills = async(resumeText, jobDescription) => {
+
+const extractAndMatchSkills = async (resumeText, jobDescription) => {
     const prompt = `You are an expert resume analyst. Analyze the resume and job description below.
 
         RESUME:
@@ -29,39 +30,47 @@ const extractAndMatchSkills = async(resumeText, jobDescription) => {
         - Keep skill names short and clean (e.g. "Project Management" not "experience in project management")
         - Include both technical AND soft skills
         - Include tools, certifications, qualifications
-        - Be thorough — do not miss important skills`
+        - Be thorough — do not miss important skills`;
 
-        const response = await groq.chat.completions.create({
-            model: 'llama-3.3-70b-versatile',
-            messages: [{ role: 'user', content: prompt }],
-            temperature: 0.1, 
-            max_tokens: 1000,
-        })
+    const response = await groq.chat.completions.create({
+        model: 'llama-3.3-70b-versatile',
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.1,
+        max_tokens: 1000,
+    });
 
-        const raw = response.choices[0]?.message?.content || '';
+    const raw = response.choices[0]?.message?.content || '';
 
-        const cleaned = raw
-  .replace(/```json/g, '')
-  .replace(/```/g, '')
-  .trim()
-        const jsonMatch = raw.match(/\{[\s\S]*\}/);
-        if (!jsonMatch) {
-            throw new Error('No valid JSON found in the response');
-        }
+    const cleaned = raw
+        .replaceAll('```json', '')
+        .replaceAll('```', '')
+        .trim();
 
-         const result = JSON.parse(jsonMatch[0])
+    const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
 
-  // Validate structure
-  if (
-    !Array.isArray(result.matchedSkills) ||
-    !Array.isArray(result.missingSkills) ||
-    !Array.isArray(result.bonusSkills) ||
-    typeof result.matchScore !== 'number'
-  ) {
-    throw new Error('Invalid response structure from AI')
-  }
+    if (!jsonMatch) {
+        throw new TypeError('AI response does not contain valid JSON');
+    }
 
-  return result
-}
+    let result;
 
-module.exports = { extractAndMatchSkills }
+    try {
+        result = JSON.parse(jsonMatch[0]);
+    } catch (error) {
+        throw new TypeError('AI returned malformed JSON');
+    }
+
+    // Validate structure
+    if (
+        !Array.isArray(result.matchedSkills) ||
+        !Array.isArray(result.missingSkills) ||
+        !Array.isArray(result.bonusSkills) ||
+        typeof result.matchScore !== 'number'
+    ) {
+        throw new TypeError('Invalid response structure from AI');
+    }
+
+    return result;
+};
+
+module.exports = { extractAndMatchSkills };

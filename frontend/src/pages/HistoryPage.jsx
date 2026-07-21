@@ -76,6 +76,8 @@ const HistoryPage = () => {
       showConfirmButton: false,
     });
       } catch (err) {
+        console.error("Delete analysis failed:", err);
+
         Swal.fire({
       title: "Error!",
       text: "Failed to delete analysis.",
@@ -139,14 +141,12 @@ const HistoryPage = () => {
           </div>
 
           {isLoggedIn && (
-            <>
              <button
               onClick={handleLogout}
               className="text-sm font-medium text-gray-500 hover:text-rose-500 transition-colors px-2 py-1.5 rounded-lg cursor-pointer"
             >
               Logout
             </button>
-            </>
           )}
         </div>
       </nav>
@@ -238,10 +238,11 @@ const HistoryPage = () => {
                 }`}
               >
                 {/* Header Interactive Row */}
-                <div 
-                  onClick={() => setExpandedId(isExpanded ? null : item._id)}
-                  className="flex items-center justify-between p-5 cursor-pointer select-none"
-                >
+                <button
+                    type="button"
+                    onClick={() => setExpandedId(isExpanded ? null : item._id)}
+                    className="w-full flex items-center justify-between p-5 text-left cursor-pointer"
+                  >
                   <div className="flex items-center gap-4">
                     <div className="w-11 h-11 rounded-full bg-[#D4ECE1] text-[#1C2E24] flex items-center justify-center font-semibold text-base">
                       {companyName.charAt(0).toUpperCase()}
@@ -279,7 +280,7 @@ const HistoryPage = () => {
                       )}
                     </div>
                   </div>
-                </div>
+                </button>
 
                 {/* Sub-drawer Inner Accordion Module */}
                 {isExpanded && (
@@ -288,12 +289,12 @@ const HistoryPage = () => {
                       <h4 className="text-[10px] font-bold tracking-wider text-slate-400 uppercase mb-2">Skills Evaluation</h4>
                       <div className="flex flex-wrap gap-1.5 max-w-3xl">
                         {item.matchedSkills?.map((skill, index) => (
-                          <span key={`match-${index}`} className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-medium">
+                          <span key={`match-${skill}`} className="text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-medium">
                             {skill}
                           </span>
                         ))}
                         {item.missingSkills?.map((skill, index) => (
-                          <span key={`miss-${index}`} className="text-[11px] px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 font-medium">
+                          <span key={`miss-${skill}`} className="text-[11px] px-2.5 py-0.5 rounded-full bg-rose-50 text-rose-600 border border-rose-100 font-medium">
                             {skill}
                           </span>
                         ))}
