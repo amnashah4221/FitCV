@@ -2,8 +2,7 @@ import React from 'react';
 import LeftPane from '../components/LeftPane.jsx';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api.js';
 import { toast } from 'react-toastify';
 

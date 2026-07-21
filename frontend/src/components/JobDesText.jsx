@@ -1,6 +1,3 @@
-import React from "react";
-import {useState} from "react";
-
 export default function JobDescText({value, onChange}) {
      return(
         <div className="bg-[#fcfbfa] border border-[#e2dfd5] rounded-2xl p-5 flex flex-col gap-2 shadow-sm">
