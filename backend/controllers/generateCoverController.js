@@ -58,7 +58,7 @@ Write a tailored cover letter that matches the candidate's experience to this sp
     res.flushHeaders()
 
     const stream = await groq.chat.completions.create({
-      model: 'llama-3.1-8b-instant',
+      model: 'llama3-70b-8192',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
