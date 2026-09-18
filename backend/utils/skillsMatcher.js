@@ -36,7 +36,7 @@ const extractAndMatchSkills = async (resumeText, jobDescription) => {
         model: 'llama3-70b-8192',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.1,
-        max_tokens: 1000,
+        max_tokens: 8192,
     });
 
     const raw = response.choices[0]?.message?.content || '';
