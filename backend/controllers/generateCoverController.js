@@ -64,7 +64,7 @@ Write a tailored cover letter that matches the candidate's experience to this sp
         { role: 'user', content: userPrompt },
       ],
       stream: true,
-      max_tokens: 1000,
+      max_tokens: 8192,
       temperature: 0.7,
     })
 
