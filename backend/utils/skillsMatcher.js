@@ -33,10 +33,10 @@ const extractAndMatchSkills = async (resumeText, jobDescription) => {
         - Be thorough — do not miss important skills`;
 
     const response = await groq.chat.completions.create({
-        model: 'llama-3.3-70b-versatile',
+        model: 'llama-3.1-8b-instant',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.1,
-        max_tokens: 8192,
+        max_tokens: 1500,
     });
 
     const raw = response.choices[0]?.message?.content || '';
