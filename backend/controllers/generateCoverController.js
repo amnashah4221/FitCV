@@ -47,18 +47,13 @@ ${jobDescription}
 
 Write a tailored cover letter that matches the candidate's experience to this specific job.`
 
-    // Note: CORS headers (Access-Control-Allow-Origin / -Credentials) are
-    // already set correctly and dynamically by the global cors() middleware
-    // in server.js based on the actual request origin. Setting them again
-    // here with a hardcoded value was overriding that and breaking requests
-    // from any frontend domain other than the one hardcoded below.
     res.setHeader('Content-Type', 'text/event-stream')
     res.setHeader('Cache-Control', 'no-cache')
     res.setHeader('Connection', 'keep-alive')
     res.flushHeaders()
 
     const stream = await groq.chat.completions.create({
-      model: 'llama3-70b-8192',
+      model: 'llama-3.3-70b-versatile',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
@@ -79,8 +74,6 @@ Write a tailored cover letter that matches the candidate's experience to this sp
 
     res.write(`data: ${JSON.stringify({ done: true })}\n\n`)
     res.end()
-
-    // ← res.end() ke baad history save karo — sirf logged in users ke liye
     if (req.user) {
       try {
         const matchResult = await extractAndMatchSkills(resumeText, jobDescription)
