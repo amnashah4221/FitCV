@@ -53,7 +53,7 @@ Write a tailored cover letter that matches the candidate's experience to this sp
     res.flushHeaders()
 
     const stream = await groq.chat.completions.create({
-      model: 'openai/gpt-oss-120b',
+      model: 'openai/gpt-oss-20b',
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: userPrompt },
