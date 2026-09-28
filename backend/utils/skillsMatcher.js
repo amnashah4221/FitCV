@@ -4,7 +4,9 @@ const extractAndMatchSkills = async (resumeText, jobDescription) => {
 
     console.log("🔥🔥 NEW SKILLS MATCHER VERSION RUNNING");
 
-    const prompt = `You are an expert resume analyst. Analyze the resume and job description below.
+    const prompt = `You are an expert resume analyst.
+
+Analyze the resume and job description below.
 
 RESUME:
 ${resumeText}
@@ -13,20 +15,38 @@ JOB DESCRIPTION:
 ${jobDescription}
 
 Your task:
+
 1. Extract ALL required skills, qualifications, tools, and keywords from the JOB DESCRIPTION.
 2. Extract ALL skills, qualifications, tools, and keywords from the RESUME.
 3. Compare them and categorize into 3 groups.
 
 Rules:
-- matchedSkills: skills required in JD that candidate HAS in resume
-- missingSkills: skills required in JD that candidate does NOT have
-- bonusSkills: skills candidate has that are NOT required in JD but still valuable
-- Don't add projects under bonusSkills. Only include skills, tools, certifications, qualifications, and keywords.
-- matchScore: percentage (0-100) based on matched/total JD skills
-- Keep skill names short and clean (e.g. "Project Management" not "experience in project management")
-- Include both technical AND soft skills
-- Include tools, certifications, and qualifications
-- Be thorough — do not miss important skills.`;
+
+- matchedSkills: skills required in the JD that the candidate HAS in the resume.
+- missingSkills: skills required in the JD that the candidate DOES NOT have in the resume.
+- bonusSkills: skills the candidate has that are NOT required in the JD but are still valuable.
+- Do not add projects under bonusSkills.
+- Only include skills, tools, certifications, qualifications, and keywords.
+- matchScore: percentage from 0 to 100 based on matched JD skills.
+- Keep skill names short and clean.
+- Include technical AND soft skills.
+- Include tools, certifications, and qualifications.
+- Be thorough and do not miss important skills.
+
+IMPORTANT:
+Return ONLY valid JSON.
+Do NOT use markdown.
+Do NOT use code fences.
+Do NOT add explanations before or after the JSON.
+
+Return exactly this structure:
+
+{
+  "matchedSkills": ["skill1", "skill2"],
+  "missingSkills": ["skill1", "skill2"],
+  "bonusSkills": ["skill1", "skill2"],
+  "matchScore": 75
+}`;
 
     let response;
 
@@ -39,7 +59,7 @@ Rules:
             messages: [
                 {
                     role: 'system',
-                    content: 'You are an expert resume analyst. Return the analysis strictly according to the provided JSON schema.'
+                    content: 'You are an expert resume analyst. Return ONLY valid JSON. No markdown, no explanations.'
                 },
                 {
                     role: 'user',
@@ -50,55 +70,10 @@ Rules:
             temperature: 0.1,
             max_completion_tokens: 1500,
 
+            // IMPORTANT:
+            // Using JSON Object Mode instead of strict JSON Schema
             response_format: {
-                type: 'json_schema',
-
-                json_schema: {
-                    name: 'skill_match_result',
-
-                    strict: true,
-
-                    schema: {
-                        type: 'object',
-
-                        properties: {
-
-                            matchedSkills: {
-                                type: 'array',
-                                items: {
-                                    type: 'string'
-                                }
-                            },
-
-                            missingSkills: {
-                                type: 'array',
-                                items: {
-                                    type: 'string'
-                                }
-                            },
-
-                            bonusSkills: {
-                                type: 'array',
-                                items: {
-                                    type: 'string'
-                                }
-                            },
-
-                            matchScore: {
-                                type: 'number'
-                            }
-                        },
-
-                        required: [
-                            'matchedSkills',
-                            'missingSkills',
-                            'bonusSkills',
-                            'matchScore'
-                        ],
-
-                        additionalProperties: false
-                    }
-                }
+                type: 'json_object'
             }
         });
 
@@ -139,7 +114,6 @@ Rules:
         throw new TypeError('AI returned malformed JSON');
     }
 
-    // Validate response structure
     if (
         !Array.isArray(result.matchedSkills) ||
         !Array.isArray(result.missingSkills) ||
