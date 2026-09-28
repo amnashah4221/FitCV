@@ -52,30 +52,30 @@ Return exactly this structure:
 
     try {
 
-        response = await groq.chat.completions.create({
+       response = await groq.chat.completions.create({
 
-            model: 'openai/gpt-oss-20b',
+    model: 'openai/gpt-oss-20b',
 
-            messages: [
-                {
-                    role: 'system',
-                    content: 'You are an expert resume analyst. Return ONLY valid JSON. No markdown, no explanations.'
-                },
-                {
-                    role: 'user',
-                    content: prompt
-                }
-            ],
+    messages: [
+        {
+            role: 'system',
+            content: `You are an expert resume analyst.
 
-            temperature: 0.1,
-            max_completion_tokens: 1500,
+Return ONLY a valid JSON object with exactly these four fields:
+matchedSkills, missingSkills, bonusSkills, matchScore.
 
-            // IMPORTANT:
-            // Using JSON Object Mode instead of strict JSON Schema
-            response_format: {
-                type: 'json_object'
-            }
-        });
+Do not return markdown.
+Do not return explanations.`
+        },
+        {
+            role: 'user',
+            content: prompt
+        }
+    ],
+
+    temperature: 0.1,
+    max_completion_tokens: 1500
+});
 
     } catch (error) {
 
