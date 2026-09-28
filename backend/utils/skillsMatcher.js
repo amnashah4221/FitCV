@@ -1,6 +1,7 @@
 const groq = require('../config/groq');
 
 const extractAndMatchSkills = async (resumeText, jobDescription) => {
+      console.log("🔥🔥 NEW SKILLS MATCHER VERSION RUNNING");
     const prompt = `You are an expert resume analyst. Analyze the resume and job description below.
 
 RESUME:
