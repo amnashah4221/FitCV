@@ -33,7 +33,7 @@ const extractAndMatchSkills = async (resumeText, jobDescription) => {
         - Be thorough — do not miss important skills`;
 
     const response = await groq.chat.completions.create({
-        model: 'openai/gpt-oss-120b',
+        model: 'openai/gpt-oss-20b',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.1,
         max_tokens: 1500,
