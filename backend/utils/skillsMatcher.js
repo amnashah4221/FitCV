@@ -74,7 +74,11 @@ Do not return explanations.`
     ],
 
     temperature: 0.1,
-    max_completion_tokens: 1500
+    max_completion_tokens: 1500,
+    include_reasoning: false,
+    response_format: {
+        type: 'json_object'
+    }
 });
 
     } catch (error) {
