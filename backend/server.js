@@ -13,14 +13,19 @@ const app = express();
 
 app.disable("x-powered-by");
 
-// CORS Configuration
+const allowedOrigins = [
+  "https://fit-cv-frontend-omega.vercel.app",
+  "http://localhost:5173",
+];
+const previewRegex = /^https:\/\/fit-cv-frontend-[a-z0-9-]+\.vercel\.app$/;
+
 app.use(
   cors({
     origin: function (origin, callback) {
       if (
         !origin ||
-        origin.includes("vercel.app") ||
-        origin === "http://localhost:5173"
+        allowedOrigins.includes(origin) ||
+        previewRegex.test(origin)
       ) {
         callback(null, true);
       } else {
@@ -28,32 +33,29 @@ app.use(
       }
     },
     credentials: true,
-    methods: [
-      "GET",
-      "POST",
-      "PUT",
-      "DELETE",
-      "OPTIONS",
-    ],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Database connection
-connectDB()
-  .then(() => {
-    console.log("Database connected successfully");
-  })
-  .catch((err) => {
-    console.error("Database connection failed:", err.message);
+app.get("/", (req, res) => {
+  res.status(200).json({
+    message: "FitCV API running ✓",
+    status: "healthy",
   });
-
+});
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("DB connect error:", err.message);
+    res.status(500).json({ message: "Database connection failed" });
+  }
+});
 
 // Routes
 app.use("/api/auth", userRoutes);
@@ -61,19 +63,8 @@ app.use("/api/cover-letter", generateLetterRoutes);
 app.use("/api/match", matchRoutes);
 app.use("/api/history", historyRoutes);
 
-
-// Health check
-app.get("/", (req, res) => {
-  res.status(200).json({
-    message: "FitCV API running ✓",
-    status: "healthy",
-  });
-});
-
-
 // Export for Vercel
 module.exports = app;
-
 
 // Local development
 if (require.main === module) {
