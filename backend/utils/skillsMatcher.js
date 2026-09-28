@@ -1,7 +1,9 @@
 const groq = require('../config/groq');
 
 const extractAndMatchSkills = async (resumeText, jobDescription) => {
-      console.log("🔥🔥 NEW SKILLS MATCHER VERSION RUNNING");
+
+    console.log("🔥🔥 NEW SKILLS MATCHER VERSION RUNNING");
+
     const prompt = `You are an expert resume analyst. Analyze the resume and job description below.
 
 RESUME:
@@ -26,72 +28,98 @@ Rules:
 - Include tools, certifications, and qualifications
 - Be thorough — do not miss important skills.`;
 
-    const response = await groq.chat.completions.create({
-        model: 'openai/gpt-oss-20b',
+    let response;
 
-        messages: [
-            {
-                role: 'system',
-                content: 'You are an expert resume analyst. Return the analysis strictly according to the provided JSON schema.'
-            },
-            {
-                role: 'user',
-                content: prompt
-            }
-        ],
+    try {
 
-        temperature: 0.1,
-        max_completion_tokens: 1500,
+        response = await groq.chat.completions.create({
 
-        response_format: {
-            type: 'json_schema',
-            json_schema: {
-                name: 'skill_match_result',
-                strict: true,
-                schema: {
-                    type: 'object',
+            model: 'openai/gpt-oss-20b',
 
-                    properties: {
-                        matchedSkills: {
-                            type: 'array',
-                            items: {
-                                type: 'string'
+            messages: [
+                {
+                    role: 'system',
+                    content: 'You are an expert resume analyst. Return the analysis strictly according to the provided JSON schema.'
+                },
+                {
+                    role: 'user',
+                    content: prompt
+                }
+            ],
+
+            temperature: 0.1,
+            max_completion_tokens: 1500,
+
+            response_format: {
+                type: 'json_schema',
+
+                json_schema: {
+                    name: 'skill_match_result',
+
+                    strict: true,
+
+                    schema: {
+                        type: 'object',
+
+                        properties: {
+
+                            matchedSkills: {
+                                type: 'array',
+                                items: {
+                                    type: 'string'
+                                }
+                            },
+
+                            missingSkills: {
+                                type: 'array',
+                                items: {
+                                    type: 'string'
+                                }
+                            },
+
+                            bonusSkills: {
+                                type: 'array',
+                                items: {
+                                    type: 'string'
+                                }
+                            },
+
+                            matchScore: {
+                                type: 'number'
                             }
                         },
 
-                        missingSkills: {
-                            type: 'array',
-                            items: {
-                                type: 'string'
-                            }
-                        },
+                        required: [
+                            'matchedSkills',
+                            'missingSkills',
+                            'bonusSkills',
+                            'matchScore'
+                        ],
 
-                        bonusSkills: {
-                            type: 'array',
-                            items: {
-                                type: 'string'
-                            }
-                        },
-
-                        matchScore: {
-                            type: 'number'
-                        }
-                    },
-
-                    required: [
-                        'matchedSkills',
-                        'missingSkills',
-                        'bonusSkills',
-                        'matchScore'
-                    ],
-
-                    additionalProperties: false
+                        additionalProperties: false
+                    }
                 }
             }
+        });
+
+    } catch (error) {
+
+        console.error("🔥🔥 GROQ ERROR MESSAGE:", error.message);
+        console.error("🔥🔥 GROQ STATUS:", error.status);
+
+        if (error.error) {
+            console.error(
+                "🔥🔥 GROQ ERROR OBJECT:",
+                JSON.stringify(error.error, null, 2)
+            );
         }
-    });
+
+        throw error;
+    }
 
     const raw = response.choices[0]?.message?.content;
+
+    console.log("🔥🔥 GROQ RAW RESPONSE:", raw);
 
     if (!raw) {
         throw new TypeError('AI returned an empty response');
@@ -100,19 +128,30 @@ Rules:
     let result;
 
     try {
+
         result = JSON.parse(raw);
+
     } catch (error) {
-        console.error('AI RAW RESPONSE:', raw);
+
+        console.error("🔥🔥 JSON PARSE ERROR:", error.message);
+        console.error("🔥🔥 RAW AI RESPONSE:", raw);
+
         throw new TypeError('AI returned malformed JSON');
     }
 
-    // Validate structure
+    // Validate response structure
     if (
         !Array.isArray(result.matchedSkills) ||
         !Array.isArray(result.missingSkills) ||
         !Array.isArray(result.bonusSkills) ||
         typeof result.matchScore !== 'number'
     ) {
+
+        console.error(
+            "🔥🔥 INVALID AI RESPONSE STRUCTURE:",
+            result
+        );
+
         throw new TypeError('Invalid response structure from AI');
     }
 
