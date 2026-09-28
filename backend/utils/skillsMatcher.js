@@ -36,7 +36,7 @@ const extractAndMatchSkills = async (resumeText, jobDescription) => {
         model: 'openai/gpt-oss-20b',
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.1,
-        max_tokens: 1500,
+        max_completion_tokens: 1500,
     });
 
     const raw = response.choices[0]?.message?.content || '';
