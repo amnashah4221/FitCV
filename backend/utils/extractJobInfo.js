@@ -3,7 +3,7 @@ const groq = require('../config/groq');
 const extractJobInfo = async (jobDescription) => {
 
     const completion = await groq.chat.completions.create({
-        model: "openai/gpt-oss-120b",
+        model: "openai/gpt-oss-20b",
         temperature: 0,
         messages: [
             {
