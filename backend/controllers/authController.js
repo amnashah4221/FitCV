@@ -24,7 +24,6 @@ const registerUser = async (req, res) => {
             return res.status(400).json({ message: 'Passwords do not match' });
         }
 
-        // Email validation using validator.js
         if (!validator.isEmail(email.trim())) {
             return res.status(400).json({ message: 'Invalid email format' });
         }
@@ -40,7 +39,7 @@ const registerUser = async (req, res) => {
         const user = await User.create({
             name: name.trim(),
             email: normalizedEmail,
-            password
+            password,
         });
 
         const token = generateToken(user._id);
@@ -49,11 +48,11 @@ const registerUser = async (req, res) => {
             _id: user._id,
             name: user.name,
             email: user.email,
-            token
+            token,
         });
-
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        console.error('REGISTER ERROR:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
@@ -65,14 +64,10 @@ const loginUser = async (req, res) => {
             return res.status(400).json({ message: 'Please provide all required fields' });
         }
 
-        if (
-            typeof email !== 'string' ||
-            typeof password !== 'string'
-        ) {
+        if (typeof email !== 'string' || typeof password !== 'string') {
             return res.status(400).json({ message: 'Invalid input format' });
         }
 
-        // Email validation using validator.js
         if (!validator.isEmail(email.trim())) {
             return res.status(400).json({ message: 'Invalid email format' });
         }
@@ -82,7 +77,7 @@ const loginUser = async (req, res) => {
         const user = await User.findOne({ email: normalizedEmail });
 
         if (!user) {
-            return res.status(404).json({ message: 'Invalid credentials' });
+            return res.status(401).json({ message: 'Invalid credentials' });
         }
 
         const isMatch = await user.comparePassword(password);
@@ -97,11 +92,11 @@ const loginUser = async (req, res) => {
             _id: user._id,
             name: user.name,
             email: user.email,
-            token
+            token,
         });
-
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        console.error('LOGIN ERROR:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
@@ -116,16 +111,12 @@ const getUserProfile = async (req, res) => {
         res.status(200).json({
             _id: user._id,
             name: user.name,
-            email: user.email
+            email: user.email,
         });
-
     } catch (error) {
-        res.status(500).json({ message: 'Server error', error: error.message });
+        console.error('PROFILE ERROR:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 };
 
-module.exports = {
-    registerUser,
-    loginUser,
-    getUserProfile
-};
+module.exports = { registerUser, loginUser, getUserProfile };
