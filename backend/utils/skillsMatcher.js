@@ -52,7 +52,7 @@ Return exactly this structure:
 
     try {
 
-       response = await groq.chat.completions.create({
+      response = await groq.chat.completions.create({
 
     model: 'openai/gpt-oss-20b',
 
@@ -75,10 +75,8 @@ Do not return explanations.`
 
     temperature: 0.1,
     max_completion_tokens: 1500,
-    include_reasoning: false,
-    response_format: {
-        type: 'json_object'
-    }
+
+    include_reasoning: false
 });
 
     } catch (error) {
