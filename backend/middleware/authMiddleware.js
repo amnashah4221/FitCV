@@ -1,64 +1,69 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+
 const protect = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader?.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Not authorized" });
+    if (!authHeader?.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'Not authorized' });
     }
 
-    const token = authHeader.split(" ")[1];
-
+    const token = authHeader.split(' ')[1];
     if (!token) {
-      return res.status(401).json({ message: "No token found" });
+      return res.status(401).json({ message: 'No token found' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const user = await User.findById(decoded.id).select("-password");
+    let decoded;
+    try {
+      decoded = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (jwtError) {
+      return res.status(401).json({
+        message: jwtError.name === 'TokenExpiredError' ? 'Token expired' : 'Token invalid',
+      });
+    }
+    const user = await User.findById(decoded.id).select('-password');
 
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      return res.status(401).json({ message: 'User not found' });
     }
 
     req.user = user;
     return next();
   } catch (error) {
-    console.error("AUTH ERROR:", error);
-
-    return res.status(401).json({
-      message: "Token failed or invalid",
-      error: error.message,
-    });
+    console.error('AUTH SERVER ERROR:', error);
+    return res.status(500).json({ message: 'Server error' });
   }
 };
 
 const optionalProtect = async (req, res, next) => {
-  try {
-    const authHeader = req.headers.authorization;
+  const authHeader = req.headers.authorization;
 
-    if (authHeader?.startsWith("Bearer ")) {
-      const token = authHeader.split(" ")[1];
+  if (authHeader?.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
 
-      if (token) {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (token) {
+      let decoded = null;
+      try {
+        decoded = jwt.verify(token, process.env.JWT_SECRET);
+      } catch (jwtError) {
+        console.warn('Optional auth: invalid token:', jwtError.message);
+      }
 
-        const user = await User.findById(decoded.id).select("-password");
-
-        if (user) {
-          req.user = user;
+      if (decoded) {
+        try {
+          const user = await User.findById(decoded.id).select('-password');
+          if (user) {
+            req.user = user;
+          }
+        } catch (dbError) {
+          console.error('Optional auth: DB error:', dbError.message);
         }
       }
     }
-  } catch (error) {
-    console.warn("Optional auth failed:", error.message);
   }
 
   next();
 };
 
-module.exports = {
-  protect,
-  optionalProtect,
-};
+module.exports = { protect, optionalProtect };
