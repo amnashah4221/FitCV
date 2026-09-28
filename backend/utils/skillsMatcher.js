@@ -1,12 +1,7 @@
 const groq = require('../config/groq');
 
 const extractAndMatchSkills = async (resumeText, jobDescription) => {
-
-    console.log("🔥🔥 NEW SKILLS MATCHER VERSION RUNNING");
-
-    const prompt = `You are an expert resume analyst.
-
-Analyze the resume and job description below.
+    const prompt = `Analyze the resume and job description below.
 
 RESUME:
 ${resumeText}
@@ -15,104 +10,69 @@ JOB DESCRIPTION:
 ${jobDescription}
 
 Your task:
-
 1. Extract ALL required skills, qualifications, tools, and keywords from the JOB DESCRIPTION.
 2. Extract ALL skills, qualifications, tools, and keywords from the RESUME.
 3. Compare them and categorize into 3 groups.
 
 Rules:
-
 - matchedSkills: skills required in the JD that the candidate HAS in the resume.
 - missingSkills: skills required in the JD that the candidate DOES NOT have in the resume.
-- bonusSkills: skills the candidate has that are NOT required in the JD but are still valuable.
-- Do not add projects under bonusSkills.
-- Only include skills, tools, certifications, qualifications, and keywords.
-- matchScore: percentage from 0 to 100 based on matched JD skills.
-- Keep skill names short and clean.
-- Include technical AND soft skills.
-- Include tools, certifications, and qualifications.
-- Be thorough and do not miss important skills.
+- bonusSkills: skills the candidate has that are NOT required in the JD but are still valuable. Do not add projects here, only skills, tools, certifications, qualifications, and keywords.
+- matchScore: integer from 0 to 100 based on matched / total JD skills.
+- Keep skill names short and clean (e.g. "Project Management").
+- Include technical AND soft skills, tools, certifications, qualifications.
+- Be thorough.
 
-IMPORTANT:
-Return ONLY valid JSON.
-Do NOT use markdown.
-Do NOT use code fences.
-Do NOT add explanations before or after the JSON.
-
-Return exactly this structure:
-
-{
-  "matchedSkills": ["skill1", "skill2"],
-  "missingSkills": ["skill1", "skill2"],
-  "bonusSkills": ["skill1", "skill2"],
-  "matchScore": 75
-}`;
+Return a JSON object with exactly these fields:
+matchedSkills (array of strings), missingSkills (array of strings), bonusSkills (array of strings), matchScore (number).`;
 
     let response;
 
     try {
-
-      response = await groq.chat.completions.create({
-
-    model: 'openai/gpt-oss-20b',
-
-    messages: [
-        {
-            role: 'system',
-            content: `You are an expert resume analyst.
-
-Return ONLY a valid JSON object with exactly these four fields:
-matchedSkills, missingSkills, bonusSkills, matchScore.
-
-Do not return markdown.
-Do not return explanations.`
-        },
-        {
-            role: 'user',
-            content: prompt
-        }
-    ],
-
-    temperature: 0.1,
-    max_completion_tokens: 1500,
-
-    include_reasoning: false
-});
-
+        response = await groq.chat.completions.create({
+            model: 'openai/gpt-oss-20b',
+            messages: [
+                {
+                    role: 'system',
+                    content:
+                        'You are an expert resume analyst. Respond only with a valid JSON object. No markdown, no explanations.',
+                },
+                { role: 'user', content: prompt },
+            ],
+            temperature: 0.1,
+            max_completion_tokens: 8192, // reasoning + output dono ke liye
+            reasoning_effort: 'low',     // kam reasoning = fast + tokens bachte hain
+            response_format: { type: 'json_object' }, // valid JSON guarantee
+        });
     } catch (error) {
-
-        console.error("🔥🔥 GROQ ERROR MESSAGE:", error.message);
-        console.error("🔥🔥 GROQ STATUS:", error.status);
-
+        console.error('GROQ ERROR:', error.status, error.message);
         if (error.error) {
-            console.error(
-                "🔥🔥 GROQ ERROR OBJECT:",
-                JSON.stringify(error.error, null, 2)
-            );
+            console.error('GROQ ERROR OBJECT:', JSON.stringify(error.error, null, 2));
         }
-
         throw error;
     }
 
-    const raw = response.choices[0]?.message?.content;
+    const choice = response.choices[0];
+    const raw = choice?.message?.content;
 
-    console.log("🔥🔥 GROQ RAW RESPONSE:", raw);
-
-    if (!raw) {
+    if (!raw || !raw.trim()) {
+        console.error('EMPTY RESPONSE. finish_reason:', choice?.finish_reason);
+        console.error('Usage:', JSON.stringify(response.usage));
         throw new TypeError('AI returned an empty response');
     }
+    const cleaned = raw.replace(/```json|```/g, '').trim();
 
     let result;
-
     try {
-
-        result = JSON.parse(raw);
-
+        const start = cleaned.indexOf('{');
+        const end = cleaned.lastIndexOf('}');
+        if (start === -1 || end === -1) {
+            throw new Error('No JSON braces found');
+        }
+        result = JSON.parse(cleaned.substring(start, end + 1));
     } catch (error) {
-
-        console.error("🔥🔥 JSON PARSE ERROR:", error.message);
-        console.error("🔥🔥 RAW AI RESPONSE:", raw);
-
+        console.error('JSON PARSE ERROR:', error.message);
+        console.error('RAW AI RESPONSE:', raw);
         throw new TypeError('AI returned malformed JSON');
     }
 
@@ -122,12 +82,7 @@ Do not return explanations.`
         !Array.isArray(result.bonusSkills) ||
         typeof result.matchScore !== 'number'
     ) {
-
-        console.error(
-            "🔥🔥 INVALID AI RESPONSE STRUCTURE:",
-            result
-        );
-
+        console.error('INVALID STRUCTURE:', result);
         throw new TypeError('Invalid response structure from AI');
     }
 
